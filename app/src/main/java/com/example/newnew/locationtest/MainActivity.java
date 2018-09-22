@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     //ลูบทุกๆวิ (ตรงนี้เราต้องไป set เวลาเองว่าเราจะเอากี่นาทีเพื่อหาระยะห่างและเวลาซึ่งในที่นี้เราอาจจะจับที่ 5 นาที)
-    private static final int INTERVAL = 1 * 1000;
+    private static final int INTERVAL = 1 * 10000;
 
 
     @Override
@@ -128,12 +128,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
+//                        Log.d("Debugging", "ooooo");
                         String url = "https://maps.googleapis.com/maps/api/directions/json?";
                         url += "origin=" + preLocation.getLatitude() + "," + preLocation.getLongitude();
                         url += "&destination=" + thisLocation.getLatitude() + "," + thisLocation.getLongitude();
                         url += "&key=" + "AIzaSyDjEK_vRWBhbFL4S_3CsXWO-TG_7bBkXwk";
                         //ปริ้นดูค่าใน logcat จะขึ้น http คลิกตามลิ้ง
-                        //Log.d("Debugging", url);
+                        Log.d("Debugging", url);
                         URLConnection connection = new URL(url).openConnection();
                         InputStream response = connection.getInputStream();
                         JSONParser parser = new JSONParser();
@@ -145,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
                         Long duration = (Long)((JSONObject) legs.get("duration")).get("value");
 
                         // calculate เพือหา v ในทุกๆ 5 นาที ทำอันนี้******** (ซึ่งตอนนี้เป็น1วิ)
-                        Log.d("Debugging", distance + "");
-                        Log.d("Debugging", duration + "");
+                        Log.d("Debugging Distance = ", distance + "");
+                        Log.d("Debugging Duration = ", duration + "");
 
                         // reset location
                         //ห้ามลบบรรทัดนี้*****

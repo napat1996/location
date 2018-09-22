@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "156070637021",
+    "firebase_url": "https://track-location-5b225.firebaseio.com",
+    "project_id": "track-location-5b225",
+    "storage_bucket": "track-location-5b225.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156070637021:android:a0238c69a2974e2b",
+        "android_client_info": {
+          "package_name": "com.example.newnew.locationtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156070637021-32dolkga1i20bd44crrcjiardeai9uqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLE05_MoHGa_kDy1UwKtfSrIaEQWviBuA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
