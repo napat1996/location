@@ -14,6 +14,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     private boolean mLocationPermissionGranted;
 
+    FirebaseDatabase database;
+    DatabaseReference mRootRef;
+
     private Location preLocation;
     private Location thisLocation;
 
@@ -46,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        database = FirebaseDatabase.getInstance();
+        mRootRef = FirebaseDatabase.getInstance().getReference("Data");
+
         //เปิด service เพื่อขอ current location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         //ขอ permission โทรศัพท์
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 locationResult.addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Log.d("Debugging", "in onSuccess");
+                        Log.e("Debugging", "in onSuccess");
                         if(location != null) {
                             if (type == "initial")
                                 preLocation = location;
@@ -111,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
                             calculateVelocity();
                         } else {
-                            Log.d("Debugging", "location is null");
+                            Log.e("Debugging", "location is null");
                         }
                     }
                 });
@@ -123,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void calculateVelocity() {
         Log.d("Debugging", "in calculate velo");
+        mRootRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://dailyemo-194412.firebaseio.com/Users");
+        Log.d("", "calculateVelocity: Firebasse is connected ");
         if (preLocation != null && thisLocation != null) {
             (new Thread(new Runnable() {
                 @Override
@@ -133,8 +144,9 @@ public class MainActivity extends AppCompatActivity {
                         url += "origin=" + preLocation.getLatitude() + "," + preLocation.getLongitude();
                         url += "&destination=" + thisLocation.getLatitude() + "," + thisLocation.getLongitude();
                         url += "&key=" + "AIzaSyDjEK_vRWBhbFL4S_3CsXWO-TG_7bBkXwk";
-                        //ปริ้นดูค่าใน logcat จะขึ้น http คลิกตามลิ้ง
+
                         Log.d("Debugging", url);
+
                         URLConnection connection = new URL(url).openConnection();
                         InputStream response = connection.getInputStream();
                         JSONParser parser = new JSONParser();
@@ -145,14 +157,17 @@ public class MainActivity extends AppCompatActivity {
                         Long distance = (Long)((JSONObject) legs.get("distance")).get("value");
                         Long duration = (Long)((JSONObject) legs.get("duration")).get("value");
 
-                        // calculate เพือหา v ในทุกๆ 5 นาที ทำอันนี้******** (ซึ่งตอนนี้เป็น1วิ)
-                        Log.d("Debugging Distance = ", distance + "");
-                        Log.d("Debugging Duration = ", duration + "");
+                        Log.e("test","test");
+                        // calculate here
+                        Log.e("Debugging Distance = ", distance + "");
+                        Log.e("Debugging Duration = ", duration + "");
+                        mRootRef.child("Distance").setValue(distance);
+                        mRootRef.child("Duration").setValue(duration);
 
                         // reset location
                         //ห้ามลบบรรทัดนี้*****
-                        preLocation = thisLocation;
-                        thisLocation = null;
+//                        preLocation = thisLocation;
+//                        thisLocation = null;
 
                     } catch (MalformedURLException ex) {
                         ex.printStackTrace();
